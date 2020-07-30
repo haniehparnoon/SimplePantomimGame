@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">SimplePantomimGame</string>
+    <string name="textView">مسابقه پانتومیم</string>
+    <string name="textView2">آماده شروع باشید</string>
+    <string name="btn_piay">شروع</string>
+    <string name="textView3">کلمه تصادفی:)</string>
+    <string name="tv_word">نراق</string>
+    <string name="btn_correct">درست</string>
+    <string name="btn_skip">ردشدن</string>
+    <string name="tv_score">امتیاز:0</string>
+    <string name="tv_time">00:00</string>
+    <string name="textView4">امتیاز</string>
+    <string name="tv_score2">12</string>
+    <string name="btn_replay">دوباره بازی کن</string>
+
+
+</resources>
