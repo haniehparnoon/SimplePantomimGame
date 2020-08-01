@@ -5,90 +5,57 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.simplepantomimgame.R
 import com.example.simplepantomimgame.databinding.FragmentGameBinding
 
 
 class GameFragment : Fragment() {
-    var score =0
-    var currentWord=""
-    var wordList= mutableListOf<String>()
+
+    lateinit var viewModel :GameViewModel
     lateinit var binding: FragmentGameBinding
+
 
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        viewModel=ViewModelProvider(this).get(GameViewModel::class.java)
         binding=FragmentGameBinding.inflate(inflater)
-        initialWordList()
-        nextWord()
+        viewModel.score.observe(viewLifecycleOwner, Observer {
+            binding.tvScore.text=it.toString()
+
+        })
+        viewModel.currentWord.observe(viewLifecycleOwner, Observer {
+            binding.tvWord.text=it.toString()
+
+
+        })
+        viewModel.isGameFinished.observe(viewLifecycleOwner, Observer {
+            if(it) gameFinished()
+        })
+
+
         binding.btnCorrect.setOnClickListener {
-            oncorrect()
+           viewModel.oncorrect()
+
 
         }
         binding.btnSkip.setOnClickListener {
-           onSkip()
+           viewModel.onSkip()
+
 
         }
 
         return binding.root
     }
 
-    private fun initialWordList() {
-        wordList= mutableListOf(
-            "پاپیروس",
-            "شدادگاه تجدید نظر",
-            "دادستان عمومی",
-            "چهار شنبه سوری پارسال",
-            "روح اموات",
-            "سفرنامه مارکوپلو",
-            "نازک نارنجی",
-            "رستوران مکزیکی",
-            "گل گاو زبان",
-            "ناتالی پرتمن",
-            "سگ اقای پتی بل",
-            "مخبر الدوله سر سعدی",
-            "شتر گاو پلنگ",
-            "کروموزوم",
-            "محلول",
-            "لر",
-            "دار المجانین",
-            "محسن چاوشی",
-            "نراق",
-            "سازمان ملل متحد")
 
-    }
-    private fun nextWord() {
-        if(wordList.size ==0){
-            findNavController().navigate(GameFragmentDirections.actionGameFragmentToScoreFragment(score))
-        }else {
-
-            currentWord = wordList.removeAt(0)
-            showWord()
-            showScore()
-        }
-    }
-
-    private fun onSkip() {
-        score--
-        nextWord()
-    }
-
-    private fun oncorrect() {
-        score++
-        nextWord()
-    }
-
-
-    private fun showWord(){
-        binding.tvWord.text=currentWord
-    }
-    private fun showScore(){
-        binding.tvScore.text=score.toString()
-
-    }
-
+   private fun gameFinished (){
+       findNavController().navigate(GameFragmentDirections.actionGameFragmentToScoreFragment(viewModel.score.value?:0))
+   }
 
 }
